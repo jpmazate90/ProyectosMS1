@@ -1,0 +1,310 @@
+# proyecto_p1.R
+# Nombre (Apellido, Nombre): Orizabal, Juan
+# Carné: 201730318
+
+# Cargue la librería dplyr para modificar data frames:
+library(dplyr)
+
+#####################################################################
+# Coloque sus soluciones aquí
+#####################################################################
+
+# --------------------------------------------------------------------
+# 1) Cargue los datos [2.5 puntos]
+install.packages('nycflights13')
+library(nycflights13)
+# ---------------------------------------------------------------------
+# 2) Inspeccione los datos [5 puntos]
+data(package = "nycflights13")
+?airlines
+?airports
+?flights
+?planes
+?weather
+
+# ¿Qué tipo de datos es cada variable?
+
+<!-- 
+  Airline:
+    carrier = chr
+    name    = chr 
+  Airports:
+    faa     = chr
+    name    = chr
+    lat     = dbl
+    lon     = dbl
+    alt     = dbl
+    tz      = dbl
+    dst     = chr
+    tzone   = chr
+  Flights:
+    year    = int 
+    month   = int
+    day     = int
+    dep_time = int
+    dep_delay = dbl
+    arr_time = int
+    sched_arr_time = int
+    arr_delay = dbl
+    carrier = chr
+    flight = int
+    tailnum = chr
+    origin = chr 
+    dest = chr
+   air_time = dbl
+   distance = dbl
+   hour = dbl
+   minute = dbl
+   time_hour =  dttm
+   
+  Planes: 
+     tailnum = chr
+     year = int
+     type = chr
+     manufacturer = chr
+     model = chr
+     engines = int
+     seats = int
+     speed = int
+     engine = chr
+  Weather:
+     origin = chr
+     year = int
+     month = int
+     day = int
+     hour = int
+     temp = dbl
+     dewp = dbl
+     humid = dbl
+     wind_dir = dbl
+     wind_speed = dbl
+     wind_gust = dbl
+     precip = dbl
+     pressure = dbl
+     visib = dbl
+     time_hour = dttm
+-->
+  
+# ¿Cuál es el tamaño total de cada data frame?
+<!-- airlines -->
+nrow(airlines)
+ncol(airlines)
+ <!-- filas = 16 , columnas =  2 -->
+<!-- airports -->
+nrow(airports)
+ncol(airports)
+<!-- filas = 1458 , columnas = 8 -->
+
+<!-- flights -->
+nrow(flights)
+ncol(flights)
+<!-- filas = 336776 , columnas = 19 -->
+
+<!-- planes -->
+nrow(planes)
+ncol(planes)
+<!-- filas = 3322 , columnas = 9 -->
+
+<!-- weather -->
+nrow(weather)
+ncol(weather)
+<!-- filas = 26115 , columnas = 15 -->
+
+
+#¿Cuáles son los límites de cada período de observación (por ejemplo, qué período de tiempo abarcan las observaciones en estos data frames)?
+
+<!-- Airlines: No tiene limite de tiempo  -->
+<!-- Airports: No tiene limite de tiempo  -->
+<!-- Flights: Limite de tiempo es todo lo del 2013  -->
+<!-- Planes: No tiene limite de tiempo  -->
+<!-- Weather: Limite de tiempo es todo lo del 2013  -->
+
+#¿Alguna de las variables tiene valores perdidos y, de ser así, cuáles tienen más valores NA que otras? ¿Por qué podría ser ese el caso?
+
+<!-- Airlines: No tiene limite de tiempo  -->
+View(airlines)
+<!-- Airports: No tiene limite de tiempo  -->
+View(airports)
+<!-- Flights: Limite de tiempo es todo lo del 2013  -->
+View(flights)
+<!-- Planes: Va de 1956 hasta el 2013  -->
+View(planes)
+<!-- Weather: Limite de tiempo es todo lo del 2013  -->
+View(weather)
+
+
+#¿Alguna de las variables tiene valores perdidos y, de ser así, cuáles tienen más valores NA que otras? ¿Por qué podría ser ese el caso?
+<!-- Airlines: 0 na  -->
+sum(is.na(airlines))
+
+<!-- Airports: 3 na  -->
+sum(is.na(airports))
+<!-- Flights: 46595 na  -->
+sum(is.na(flights))
+<!-- Planes: 3369 na  -->
+sum(is.na(planes))
+
+<!-- Weather: 23974 na  -->
+sum(is.na(weather))
+
+<!-- El que mas na's tiene es el data set de flights con: 46595, el que menos tiene es airlines con 0. Lo que pasa es que son datos que no son necesarios ingresar en un momento esperado, pueden ser nulls. Seria como un campo que puede ir null en una Base de datos -->
+
+# --------------------------------------------------------------------
+# 3) Responda preguntas sobre los datos
+
+
+
+# a) ---------------
+# ¿Cuántos vuelos desde los aeropuertos de Nueva York en 2013 tuvieron un retraso de llegada de dos
+# o más horas?
+
+count(flights %>% select(origin, dest, arr_delay) %>% filter( arr_delay > 120 ))
+
+
+#Resultado del comando: 10034
+# Respuesta: 10034 vuelos
+
+
+# b) ----------------
+# ¿Cuántos vuelos desde los aeropuertos de Nueva York en 2013 partieron en el semestre de otoño (
+# es decir, los meses de agosto a diciembre, inclusive)?
+
+count(flights %>% select(origin, dest, month) %>% filter( month >= 8 & month <= 12 ) )
+
+#Resultado del comando: 141193
+# Respuesta: 141193 vuelos
+
+# c) ----------------
+# ¿Cuántos vuelos desde los aeropuertos de Nueva York en 2013 llegaron más de dos horas
+# de retraso a sus destinos, pero no salieron tarde de un aeropuerto de Nueva York?
+
+count(flights %>% select(origin, dest, arr_delay, dep_delay) %>% filter( arr_delay > 120 )  %>%   filter(dep_delay <=0) )
+#Resultado del comando:  29
+# Respuesta:  29 vuelos
+
+# d) ----------------
+# ¿Cuántos vuelos desde los aeropuertos de Nueva York en 2013 fueron operados por
+# las aerolíneas United, American o Delta?
+
+count(flights %>% select(carrier) %>% filter( carrier == 'AA' | carrier == 'UA' | carrier == 'DL'  ))
+
+# Resultado del comando:  139504
+# Respuesta:  139504 vuelos
+
+# e) ----------------
+# Enumere las 3 aerolíneas principales (por nombre, no por código de la aerolínea) que tuvieron el
+# tiempo de retraso más alto de cualquier vuelo que salió de un aeropuerto de Nueva York en 2013.
+
+merge( airlines, flights, "carrier") %>% select(name,carrier, dep_delay)  %>% arrange(desc(dep_delay))   %>% distinct(carrier,name) %>% select ( name) %>% head(3)
+
+# Respuesta de los 3 primeros aeropuertos: 
+#1 Hawaiian Airlines Inc.
+#2              Envoy Air
+#3 American Airlines Inc.
+
+# f)----------------
+# ¿Cuántos vuelos desde los aeropuertos de Nueva York en 2013 volaron a los 3 principales
+# aeropuertos del área de DC: Reagan National, Dulles o BWI?
+
+count(flights %>% select( origin, dest) %>% filter(dest == "DCA" | dest == "IAD" | dest == "BWI"))
+
+#Resultado del comando: 17186
+# Respuesta:  17186 vuelos
+
+# g)----------------
+# ¿Cuál es el año de fabricación y el número de cola del avión más antiguo que
+# alguna aerolínea utilizó en 2013 para volar desde los aeropuertos de Nueva York, y qué aerolínea
+# operaba ese avión?
+
+ merge( planes, flights, "tailnum") %>% merge(airlines, "carrier") %>% arrange(year.x) %>% head(1) %>% select(tailnum, name, year.x)
+# Resultado del comando: Tailnum: N381AA , Name: American Airlines Inc.   year.x = 1956
+# Respuesta: American Airlines Inc. opera el avión de 1956  con el número de cola 
+# N381AA
+
+# h) 
+# Usando el data frame `flights`, calcule una nueva variable ` velocidad` (en millas por
+# hora) usando las variables `air_time` y` distance`. Para el vuelo más rápido
+# en el conjunto de datos, ¿cuál fue su velocidad y cuáles fueron los códigos de aeropuerto 
+# de origen y destino?
+
+ flights %>% mutate(velocidad = flights$distance / (flights$air_time /60)) %>% select(origin, dest, velocidad)  %>% arrange(desc(velocidad)) %>% head(1)
+ 
+# Resultado comando: Origin:  LGA, Dest:  ATL, Velocidad: 703.
+
+# Respuesta: El vuelo más rápido voló a un promedio de 703 mph de  LGA  a ATL.
+
+# i)----------------
+# Usando el data frame `flights`, calcule una nueva variable` cambio_tiempo_vuelo` (en
+# minutos) que es igual a la cantidad de tiempo perdido o recuperado
+# durante el vuelo. El tiempo "perdido" es menor que 0 y refleja un tiempo de vuelo
+# que fue _más largo_ de lo programado, mientras que el tiempo "recuperado" es mayor que 0 y
+# refleja un tiempo de vuelo que fue _más rápido_ de lo programado. Para el vuelo que
+# tomó más tiempo durante su vuelo, cuánto tiempo se hizo (en
+# minutos) y cuáles fueron los códigos de aeropuerto de origen y destino?
+
+flights %>% mutate(cambio_tiempo_vuelo = flights$dep_delay - flights$arr_delay) %>% select(origin, dest, air_time, cambio_tiempo_vuelo)  %>% arrange(cambio_tiempo_vuelo) %>% head(1)
+
+# Resultado del comando: Origin: JFK, Dest:    LAX, Air_time:   336, Cambio_Tiempo_Vuelo: -196
+# Respuesta: El vuelo que representó más tiempo durante su vuelo fue  336 minutos con 196
+# minutos de retraso y voló de JFK  a LAX.
+
+# j) ----------------
+# De todos los vuelos en 2013 que partieron de los aeropuertos de Nueva York, enumere los 3 destinos
+# principales (nombres de aeropuerto, no códigos de aeropuerto) con el mayor retraso
+# medio de llegada.
+
+merge(airports, flights, by.x = "faa", by.y = "dest") %>%  group_by(faa,name)  %>% summarise(retraso = mean(arr_delay, na.rm = TRUE)) %>% arrange(retraso)   %>% distinct(faa, retraso,name) %>%head(3)
+
+#Resultado del comando: 
+#faa   name                      retraso
+#<chr> <chr>                       <dbl>
+#1 LEX   Blue Grass                 -22   
+#2 PSP   Palm Springs Intl          -12.7 
+#3 SNA   John Wayne Arpt Orange Co   -7.87
+
+# Respuesta: Los 3 aeropuertos principales son: 1.-  Blue Grass, 2.-  Palm Springs Intl , 3.- John Wayne Arpt Orange Co
+
+# k) ----------------
+# Utilice el data frame `flights` para crear un nuevo data frame de resumen llamado
+# `resumenRetrasoDiario` que contiene las siguientes variables para cada día en
+# 2013:
+# -retrMedioSalida: el retraso medio de salida (en minutos)
+# - numVuelosRetrasados: el número total de vuelos retrasados
+# Guarde este archivo en su carpeta de "datos" como "resumenRetrasoDiario.csv"
+
+# comando usado para crear data frame
+
+resumenRetrasoDiario <- flights %>% group_by(year, month, day) %>% summarise(retMedioSalida=mean(dep_delay, na.rm=TRUE), numVuelosRetrasados= sum(dep_delay-arr_delay<0,na.rm=TRUE))
+
+#comando para guardar en csv
+
+ write.csv(resumenRetrasoDiario, file="datos/resumenRetrasoDiario.csv")
+
+# l) ----------------
+
+# Con el data frame resumenRetrasoDiario que creó en el inciso k), 
+# responda las siguientes dos preguntas:
+#  - Encuentre el día de 2013 con el mayor número de vuelos retrasados. 
+# Ese día, ¿cuántos vuelos se retrasaron y cuál fue el tiempo medio de retraso (en minutos)?
+
+resumenRetrasoDiario %>% arrange(desc(numVuelosRetrasados)) %>% head(1)
+
+
+
+#  - Encuentre el día de 2013 con el mayor retraso medio de salida (en minutos).
+# Ese día, ¿cuántos vuelos se retrasaron y cuál fue el tiempo medio de retraso (en minutos)?
+
+resumenRetrasoDiario %>% arrange(desc(retMedioSalida)) %>% head(1)
+
+
+# Respuesta: En el día con el mayor número de vuelos retrasados,
+# hubo 637 vuelos retrasados 
+# con un retraso promedio de 40.7 minutos. 
+
+
+# En el día con el mayor retraso medio en la salida, 
+# hubo 334 retrasos en los vuelos 
+# con un retraso promedio de 83.5  minutos.
+
+# ------------------------------------------------- -------------------
+
