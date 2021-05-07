@@ -3,7 +3,7 @@
     "path": "~/9noSemestre/MS1/Proyecto_P1-Orizabal/Proyecto_P1-Orizabal/proyecto_p1.Rmd",
     "project_path": "proyecto_p1.Rmd",
     "type": "r_markdown",
-    "hash": "1075775074",
+    "hash": "1642634428",
     "contents": "",
     "dirty": false,
     "created": 1620299600154.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "291,0",
-        "scrollLine": "270"
+        "cursorPosition": "265,118",
+        "scrollLine": "236"
     },
     "folds": "",
-    "lastKnownWriteTime": 1620374627,
+    "lastKnownWriteTime": 1620376178,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1620374627507,
+    "last_content_update": 1620376178112,
     "read_only": false,
     "read_only_alternatives": []
 }

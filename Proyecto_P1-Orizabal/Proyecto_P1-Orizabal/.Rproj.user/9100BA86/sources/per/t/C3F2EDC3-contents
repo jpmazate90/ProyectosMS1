@@ -253,16 +253,17 @@ flights %>% mutate(cambio_tiempo_vuelo = flights$dep_delay - flights$arr_delay) 
 # principales (nombres de aeropuerto, no códigos de aeropuerto) con el mayor retraso
 # medio de llegada.
 
-merge(airports, flights, by.x = "faa", by.y = "dest") %>%  group_by(faa,name)  %>% summarise(retraso = mean(arr_delay, na.rm = TRUE)) %>% arrange(retraso)   %>% distinct(faa, retraso,name) %>%head(3)
+merge(airports, flights, by.x = "faa", by.y = "dest") %>%  group_by(faa,name)%>% summarise(retraso = mean(arr_delay, na.rm = TRUE)) %>% arrange(desc(retraso))   %>% distinct(faa, retraso,name) %>%head(3)
+
 
 #Resultado del comando: 
-#faa   name                      retraso
-#<chr> <chr>                       <dbl>
-#1 LEX   Blue Grass                 -22   
-#2 PSP   Palm Springs Intl          -12.7 
-#3 SNA   John Wayne Arpt Orange Co   -7.87
+#faa   name                  retraso
+#<chr> <chr>                   <dbl>
+#1 CAE   Columbia Metropolitan    41.8
+#2 TUL   Tulsa Intl               33.7
+#3 OKC   Will Rogers World        30.6
 
-# Respuesta: Los 3 aeropuertos principales son: 1.-  Blue Grass, 2.-  Palm Springs Intl , 3.- John Wayne Arpt Orange Co
+# Respuesta: Los 3 aeropuertos principales son: 1.- Columbia Metropolitan, 2.-   Tulsa Intl   , 3.-  Will Rogers World
 
 # k) ----------------
 # Utilice el data frame `flights` para crear un nuevo data frame de resumen llamado
