@@ -1,0 +1,74 @@
+---
+title: "Proyecto: Resumen del dataset starwars del paquete dplyr"
+author: "Juan Orizabal"
+date: "13/05/2021"
+output: html_document
+---
+
+```{r, echo=FALSE}
+# Cargue la biblioteca que contiene su conjunto de datos aquí:
+library(dplyr)
+```
+
+# Descripción de los datos
+
+
+El data set starwars se enfoca principalmente en los personajes que aparecen en sus peliculas. 
+Los datos originales, de SWAPI, la API de Star Wars,
+https://swapi.dev/, se han revisado para reflejar investigaciones adicionales sobre las 
+determinaciones de género y sexo de los personajes.
+
+
+Fuente de datos:
+
+Created by Paul Hallett Maintained by Juriy Bura ©2021
+
+Twitter:  https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fswapi.dev%2F&ref_src=twsrc%5Etfw&region=follow_link&screen_name=juriy&tw_p=followbutton
+
+Github: https://github.com/juriy
+
+
+
+Variable    | Descripcion
+------------|------------------------
+name        | Nombre del personaje
+height      | altura del personaje
+mass        | Peso del personaje
+hair_color  | Color de pelo del personaje
+skin_color  | Color de piel del personaje
+eye_color   | Color de ojo del personaje
+birth_year  | Fecha de cumpleaños  del personaje
+sex         | Sexo biologico del personaje 
+gender      | La identidad de genero determinado por la personalidad de genero del personaje
+homeworld   | Mundo natal del personaje
+species     | Nombre de la especie del personaje
+films       | Lista de peliculas en las que aparece el personaje
+vehicles    | Lista  de vehiculos que ha pilotado el personaje
+starships   | Lista de naves que ha pilotado el personaje
+
+# Visualizaciones de datos
+
+```{r, echo=TRUE}
+# Escriba el código R aquí para cargar su archivo de datos
+library(dplyr)
+library(ggplot2)
+```
+
+
+```{r, echo=TRUE}
+ggplot(data = starwars) + geom_point(mapping =  aes(x =height, y =hair_color ))
+
+```
+
+
+El comando lo que hace es hacer un grafico de dispersion entre dos variables, height(variable continua) en el eje x,  y Hair color(variable categorica) en el eje Y.  Que muestra la relacion entre la altura de los personajes y sus colores de pelo, el que mas elementos tiene es el que no tiene color de pelo. El que menos tiene es unknown que no tiene ningun elemento. Lo que se espera es que el lector entienda o deduzca es como es que existen distintos colores de pelo en funcion de la altura.
+
+
+
+
+```{r, echo=TRUE}
+ggplot(data = starwars) + geom_bar(mapping =  aes(x =sex ))
+```
+
+
+Esta grafica es un grafico de barras que representa la cantidad de tipos de sexo que existen en starwars. El que mas tiene es male con 60 y el que menos tiene es Hermaphroditic con 2. Se utilizo la variable sex, porque es una variable categorica que tiene relativamente pocos datos, 5 especificamente. Lo que se espera obtener de parte del usuario es que deduzca o detecte de que tipo de sexo es al que pertenecen los personajes de starwars asi como de saber que sexo tiene mas personajes, y asi tambien quien tiene menos.
